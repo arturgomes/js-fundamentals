@@ -1,11 +1,11 @@
 import './App.css'
-import { UserComponent } from './components/UserComponent'
+import { UserProfile } from './components/UserProfile'
 
 function App() {
 
   return (
     <>
-      <UserComponent />
+      <UserProfile />
     </>
   )
 }
