@@ -9,7 +9,6 @@ const fetchUser = async (userId: number) => {
     );
     if (!response.ok) throw new Error("Network response was not ok"); // Checks if the response is successful
     const data = await response.json(); // Parses the JSON data
-    console.log("User Data:", data);
     return data; // Returns the fetched data
   } catch (error) {
     console.error("Fetch error:", error); // Logs any fetch errors
