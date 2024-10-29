@@ -48,11 +48,10 @@ export const UserProfile: React.FC = () => {
 
     // Asynchronous function to fetch user and posts data in parallel
     const fetchData = async (userId: number) => {
-      
-      // Increment the fetch count each time this function is called
+
       const fetchCount = incrementFetchCount();
       console.log(`Fetch attempt #${fetchCount}`);
-
+      
       // Promise.allSettled is used to ensure each API call is handled independently, even if one fails.
       const results = await Promise.allSettled([
         fetchUser(userId),
