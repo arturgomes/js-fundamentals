@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Posts, User } from "../../interfaces"; // Importing TypeScript interfaces for type safety
+import React, { useEffect, useMemo, useState } from "react";
+import { Post, Posts, User } from "../../interfaces"; // Importing TypeScript interfaces for type safety
 
 // Fetches a user by userId asynchronously, handling potential errors
 const fetchUser = async (userId: number) => {
@@ -70,23 +70,59 @@ export const UserProfile: React.FC = () => {
     fetchData(userId); // Calls fetchData with the generated userId on component mount
   }, []); // Empty dependency array so this effect runs only once on component mount
 
+// Higher-order function examples with useMemo
+  // Filter posts that contain the word "voluptate" in their title
+  const filteredPosts = useMemo(() => {
+    return posts.filter(post => post.title.includes("voluptate"));
+  }, [posts]);
+
+  // Map over the posts to display the title with the word "Title: " prepended
+  const mappedPosts = useMemo(() => {
+    return posts.map(post => ({
+      ...post,
+      title: `Title: ${post.title}`
+    }));
+  }, [posts]);
+
+  // Reduce to calculate the total length of all post titles
+  const totalTitleLength = useMemo(() => {
+    return posts.reduce((acc, post) => acc + post.title.length, 0);
+  }, [posts]);
+
   return (
     <div>
-      {userData && ( // Conditionally renders user data if available
+      {userData && (
         <>
           <h1>{userData.name}</h1>
           <p>Email: {userData.email}</p>
         </>
       )}
       <h2>Posts:</h2>
-      {posts.length > 0 ? ( // Conditionally renders posts list if posts array is not empty
+      
+      {/* Display total title length */}
+      <p>Total Length of All Post Titles: {totalTitleLength}</p>
+      
+      {/* Conditionally renders posts list if posts array is not empty */}
+      {posts.length > 0 ? (
         <ul>
-          {posts.map((post) => (
+          {mappedPosts.map((post: Post) => (
             <li key={post.id}>{post.title}</li> // Renders each post title with a unique key
           ))}
         </ul>
       ) : (
-        <p>Loading posts...</p> // Shows loading message if posts are not yet loaded
+        <p>Loading posts...</p>
+      )}
+
+      {/* Display filtered posts if available */}
+      <h2>Filtered Posts (Titles containing "voluptate"):</h2>
+      {filteredPosts.length > 0 ? (
+        <ul>
+          {filteredPosts.map((post: Post) => (
+            <li key={post.id}>{post.title}</li>
+          ))}
+        </ul>
+      ) : (
+        <p>No posts matching filter criteria.</p>
       )}
     </div>
   );
