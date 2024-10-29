@@ -26,16 +26,33 @@ const fetchPosts = async (userId: number) => {
   return response.json(); // Returns the parsed JSON posts data
 };
 
+// Function that creates a closure to track fetch counts
+const createFetchCounter = () => {
+  let count = 0; // This is the variable that will be "remembered" in the closure
+  return () => {
+    count += 1;
+    return count;
+  };
+};
+
 // React component for displaying user profile and posts
 export const UserProfile: React.FC = () => {
   const [userData, setUserData] = useState<User | null>(null); // State to store user data or null if not available
   const [posts, setPosts] = useState<Posts>([]); // State to store posts data as an array
+
+   // Create the fetch counter and initialize the counter function
+   const incrementFetchCount = createFetchCounter();
 
   useEffect(() => {
     const userId = Math.floor(Math.random() * (10 - 1) + 1); // Generates a random userId between 1 and 9
 
     // Asynchronous function to fetch user and posts data in parallel
     const fetchData = async (userId: number) => {
+      
+      // Increment the fetch count each time this function is called
+      const fetchCount = incrementFetchCount();
+      console.log(`Fetch attempt #${fetchCount}`);
+
       // Promise.allSettled is used to ensure each API call is handled independently, even if one fails.
       const results = await Promise.allSettled([
         fetchUser(userId),
