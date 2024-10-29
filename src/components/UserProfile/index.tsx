@@ -38,6 +38,7 @@ const createFetchCounter = () => {
 export const UserProfile: React.FC = () => {
   const [userData, setUserData] = useState<User | null>(null); // State to store user data or null if not available
   const [posts, setPosts] = useState<Posts>([]); // State to store posts data as an array
+  const [searchQuery, setSearchQuery] = useState<string>(""); // State to store search input
 
    // Create the fetch counter and initialize the counter function
    const incrementFetchCount = createFetchCounter();
@@ -73,8 +74,8 @@ export const UserProfile: React.FC = () => {
 // Higher-order function examples with useMemo
   // Filter posts that contain the word "voluptate" in their title
   const filteredPosts = useMemo(() => {
-    return posts.filter(post => post.title.includes("voluptate"));
-  }, [posts]);
+    return posts.filter(post => post.title.includes(searchQuery));
+  }, [posts, searchQuery]);
 
   // Map over the posts to display the title with the word "Title: " prepended
   const mappedPosts = useMemo(() => {
@@ -97,6 +98,17 @@ export const UserProfile: React.FC = () => {
           <p>Email: {userData.email}</p>
         </>
       )}
+      <div>
+        <label htmlFor="search">Search Posts:</label>
+        <input
+          id="search"
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search by title..."
+        />
+      </div>
+      
       <h2>Posts:</h2>
       
       {/* Display total title length */}
